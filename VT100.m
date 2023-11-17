@@ -4,6 +4,7 @@
 #include <sys/event.h>
 #include <sys/ioctl.h>
 #include <util.h>
+#include <unistd.h>
 
 extern int proc_pidpath(pid_t,char*,uint32_t);
 
@@ -113,7 +114,13 @@ static void screen_line_release(CFAllocatorRef allocator,screen_line_t* line) {
      .ws_col=screenWidth,.ws_row=screenHeight});
     if(pid==-1){raiseException(@"forkpty");}
     else if(pid==0){
-        if(execve("/usr/bin/login",
+        char* path;
+        if(access("/var/jb/usr/bin/login", F_OK)==0) {
+            path="/var/jb/usr/bin/login";
+        } else {
+            path="/usr/bin/login"
+        }  
+        if(execve(path,
                   (char*[]){"login","-fp",getlogin(),NULL},
                   (char*[]){"TERM=xterm-256color","LANG=en_US.UTF-8",NULL})==-1)
         raiseException(@"execve(login)");
