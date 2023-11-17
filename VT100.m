@@ -118,7 +118,7 @@ static void screen_line_release(CFAllocatorRef allocator,screen_line_t* line) {
         if(access("/var/jb/usr/bin/login", F_OK)==0) {
             path="/var/jb/usr/bin/login";
         } else {
-            path="/usr/bin/login"
+            path="/usr/bin/login";
         }  
         if(execve(path,
                   (char*[]){"login","-fp",getlogin(),NULL},
